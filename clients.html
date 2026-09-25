@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clients | Barber Shop</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <nav class="menu">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="services.html">Services</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="professionals.html">Professionals</a>
+
+      <button onclick="exportBackup()">Backup</button>
+      <div id="backup-message" class="message-box">
+        <span>Do you want to create a backup?</span>
+        <button type="button" onclick="confirmBackup()">Backup</button>
+        <button type="button" onclick="closeBackupMessage()">Cancel</button>
+      </div>
+
+      <button onclick="logout()">Logout</button>
+      <div id="logout-message" class="message-box">
+        <span>Are you sure you want to logout?</span>
+        <button type="button" onclick="confirmLogout()">Logout</button>
+        <button type="button" onclick="closeLogoutMessage()">Cancel</button>
+      </div>
+    </nav>
+
+    <div class="page">
+      <header class="top-bar">
+        <h2>Clients</h2>
+      </header>
+
+      <main class="content">
+        <h3>Add / Edit Client</h3>
+        <form id="client-form">
+          <input type="hidden" id="client-index" />
+
+          <input type="text" id="name" placeholder="Client Name" required />
+          <input type="text" id="email" placeholder="Client Email" required />
+          <input type="text" id="phone" placeholder="Client Phone" required />
+
+          <button type="submit">Save Client</button>
+        </form>
+
+        <hr />
+
+        <input type="text" id="client-search" placeholder="Search clients..." />
+
+        <table id="clients-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Appointments</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--Load Clients-->
+          </tbody>
+        </table>
+      </main>
+    </div>
+    <script src="js/clients.js"></script>
+    <script src="js/backup.js"></script>
+    <script src="js/logout.js"></script>
+  </body>
+</html>

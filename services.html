@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <title>Services | Barber Shop</title>
+  </head>
+  <body>
+    <nav class="menu">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="clients.html">Clients</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="professionals.html">Professionals</a>
+
+      <button onclick="exportBackup()">Backup</button>
+      <div id="backup-message" class="message-box">
+        <span>Do you want to create a backup?</span>
+        <button type="button" onclick="confirmBackup()">Backup</button>
+        <button type="button" onclick="closeBackupMessage()">Cancel</button>
+      </div>
+
+      <button onclick="logout()">Logout</button>
+      <div id="logout-message" class="message-box">
+        <span>Are you sure you want to logout?</span>
+        <button type="button" onclick="confirmLogout()">Logout</button>
+        <button type="button" onclick="closeLogoutMessage()">Cancel</button>
+      </div>
+    </nav>
+
+    <div class="page">
+      <header class="top-bar">
+        <h2>Services</h2>
+      </header>
+
+      <main class="content">
+        <h3>Add Service</h3>
+
+        <form id="service-form">
+          <input type="hidden" id="service-index" />
+          <input
+            type="text"
+            id="service-name"
+            placeholder="Service Name"
+            required
+          />
+          <input
+            type="number"
+            id="service-price"
+            min="0"
+            placeholder="Price"
+            required
+          />
+          <input
+            type="number"
+            id="service-duration"
+            min="1"
+            placeholder="Duration (minutes)"
+            required
+          />
+          <button type="submit">Save Service</button>
+        </form>
+
+        <hr />
+
+        <!-- Campo de busca -->
+        <input
+          type="text"
+          id="service-search"
+          placeholder="Search services..."
+        />
+
+        <h3>Services List</h3>
+
+        <table id="services-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Duration</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </main>
+    </div>
+    <script src="js/services.js"></script>
+    <script src="js/backup.js"></script>
+    <script src="js/logout.js"></script>
+  </body>
+</html>

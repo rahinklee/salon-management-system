@@ -1,0 +1,114 @@
+/* =========================
+   BASE
+========================= */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: white;
+}
+
+/* =========================
+   LOGIN MODE (override)
+========================= */
+
+body:has(.login-container) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* =========================
+   LOGIN BOX
+========================= */
+
+.login-container {
+  background-color: #1c1c1c;
+  padding: 40px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 50%);
+  text-align: center;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #1e1e2f;
+  color: white;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--orange-main);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-container button:hover {
+  background-color: var(--orange-light);
+}
+
+/* =========================
+   APP LAYOUT (sidebar system)
+========================= */
+
+body:not(:has(.login-container)) {
+  display: flex;
+}
+
+/* Sidebar */
+.menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 220px;
+  min-height: 100vh;
+  background-color: #111;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu a {
+  padding: 12px 20px;
+  color: #ccc;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+/* Right side container */
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 220px;
+}
+
+/* Top bar */
+.top-bar {
+  background-color: #1c1c1c;
+  padding: 15px 30px;
+  border-bottom: 1px solid #333;
+}
+
+/* Main content */
+.content {
+  padding: 40px;
+}
