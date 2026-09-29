@@ -3,6 +3,7 @@ function exportBackup() {
 }
 
 function confirmBackup() {
+  // Collect all system data stored in localStorage.
   const backup = {
     clients: JSON.parse(localStorage.getItem("clients")) || [],
     services: JSON.parse(localStorage.getItem("services")) || [],
@@ -10,12 +11,13 @@ function confirmBackup() {
     appointments: JSON.parse(localStorage.getItem("appointments")) || [],
   };
 
+  // Convert the data to JSON and create a downloadable file.
   const data = JSON.stringify(backup, null, 2);
   const blob = new Blob([data], { type: "application/json" });
 
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "barber-shop-backup.json";
+  link.download = "salon-management-backup.json";
   link.click();
 
   document.getElementById("backup-message").style.display = "none";

@@ -6,10 +6,15 @@ form.addEventListener("submit", function (event) {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
+  // Check the login credentials before allowing access to the system.
   if (username === "admin" && password === "123") {
     localStorage.setItem("loggedUser", username);
     window.location.href = "dashboard.html";
   } else {
-    alert("Invalid username or password");
+    document.getElementById("login-message").style.display = "block";
   }
 });
+
+function closeLoginMessage() {
+  document.getElementById("login-message").style.display = "none";
+}

@@ -1,14 +1,14 @@
 let clients = JSON.parse(localStorage.getItem("clients")) || [];
 const form = document.getElementById("client-form");
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
 
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const phone = document.getElementById("phone").value;
-
   const index = document.getElementById("client-index").value;
+
   if (index === "") {
     clients.push({ name, email, phone });
   } else {
@@ -28,31 +28,34 @@ function saveClients() {
 
 function renderClients() {
   const tbody = document.querySelector("#clients-table tbody");
-  tbody.innerHTML = ""; //clear screen
+
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
 
   clients.forEach((client, index) => {
     const tr = document.createElement("tr");
-
-    const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
 
     const appointmentCount = appointments.filter(
       (appointment) => appointment.client === client.name,
     ).length;
 
     tr.innerHTML = `
-        <td>${client.name}</td>
-        <td>${client.email}</td>
-        <td>${client.phone}</td>
-        <td>
-          <button onclick="viewClientAppointments('${client.name}')">
-            ${appointmentCount}
-          </button>
-        </td>
-        
-        <td>
+      <td>${client.name}</td>
+      <td>${client.email}</td>
+      <td>${client.phone}</td>
+      <td>
+        <button onclick="viewClientAppointments('${client.name}')">
+          ${appointmentCount}
+        </button>
+      </td>
+      <td>
         <button onclick="editClient(${index})">✏️</button>
         <button onclick="deleteClient(${index})">🗑️</button>
-        `;
+      </td>
+    `;
 
     tbody.appendChild(tr);
   });
@@ -64,72 +67,91 @@ function editClient(index) {
   document.getElementById("name").value = client.name;
   document.getElementById("email").value = client.email;
   document.getElementById("phone").value = client.phone;
-
   document.getElementById("client-index").value = index;
 }
 
 function deleteClient(index) {
-  const confirmDelete = confirm("Are you sure you want to delete this client?");
+  window.clientToDelete = index;
+  document.getElementById("delete-client-message").style.display = "block";
+}
 
-  if (!confirmDelete) return;
-
-  const clients = JSON.parse(localStorage.getItem("clients")) || [];
-
-  clients.splice(index, 1);
+function confirmDeleteClient() {
+  clients.splice(window.clientToDelete, 1);
 
   saveClients();
-
   renderClients();
+
+  closeDeleteClientMessage();
+}
+
+function closeDeleteClientMessage() {
+  document.getElementById("delete-client-message").style.display = "none";
+  window.clientToDelete = null;
 }
 
 renderClients();
 
-// Campo de busca
 const clientSearch = document.getElementById("client-search");
 
 if (clientSearch) {
   clientSearch.addEventListener("input", function () {
     const query = clientSearch.value.toLowerCase();
 
-    // chama função que atualiza a tabela filtrando
     filterClients(query);
   });
 }
 
 function filterClients(query) {
-  const clients = JSON.parse(localStorage.getItem("clients")) || [];
   const tbody = document.querySelector("#clients-table tbody");
 
-  tbody.innerHTML = ""; // limpa tabela
+  if (!tbody) return;
 
-  // filtra pelo nome, email ou telefone
-  const filtered = clients.filter(
-    (client) =>
-      client.name.toLowerCase().includes(query) ||
-      client.email.toLowerCase().includes(query) ||
-      client.phone.toLowerCase().includes(query),
-  );
+  tbody.innerHTML = "";
 
-  filtered.forEach((client) => {
+  const filtered = clients
+    .map((client, index) => ({ client, index }))
+    .filter(
+      ({ client }) =>
+        client.name.toLowerCase().includes(query) ||
+        client.email.toLowerCase().includes(query) ||
+        client.phone.toLowerCase().includes(query),
+    );
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5">No clients found</td>
+      </tr>
+    `;
+    return;
+  }
+
+  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+  filtered.forEach(({ client, index }) => {
     const tr = document.createElement("tr");
+
+    const appointmentCount = appointments.filter(
+      (appointment) => appointment.client === client.name,
+    ).length;
 
     tr.innerHTML = `
       <td>${client.name}</td>
       <td>${client.email}</td>
       <td>${client.phone}</td>
       <td>
-        <button onclick="editClient(${index})">Edit></button>
-        <button onclick="deleteClient(${index})">Delete></button>
+        <button onclick="viewClientAppointments('${client.name}')">
+          ${appointmentCount}
+        </button>
+      </td>
+      <td>
+        <button onclick="editClient(${index})">✏️</button>
+        <button onclick="deleteClient(${index})">🗑️</button>
       </td>
     `;
 
     tbody.appendChild(tr);
   });
-
-  // if find nothing
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4">No clients found</td></tr>`;
-  }
 }
 
 function viewClientAppointments(clientName) {

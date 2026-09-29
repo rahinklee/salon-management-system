@@ -5,8 +5,9 @@ function loadDashboardStats() {
 
   document.getElementById("total-clients").innerText = clients.length;
   document.getElementById("total-services").innerText = services.length;
-  document.getElementById("total-appointments").innerHTML = appointments.length;
+  document.getElementById("total-appointments").innerText = appointments.length;
 
+  // Revenue is calculated only from completed appointments.
   const completedAppointments = appointments.filter(
     (appointment) => appointment.status === "Completed",
   );
@@ -23,15 +24,15 @@ function loadDashboardStats() {
     `$${totalRevenue.toFixed(2)}`;
 }
 
-function loadtodayAppointments() {
+function loadTodayAppointments() {
   const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-
   const table = document.querySelector("#today-appointments tbody");
 
   if (!table) return;
 
   table.innerHTML = "";
 
+  // Compare appointment dates with today's date.
   const today = new Date().toDateString();
 
   appointments.forEach((appointment) => {
@@ -58,7 +59,6 @@ function loadtodayAppointments() {
 
 function loadUpcomingAppointments() {
   const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-
   const tbody = document.querySelector("#upcoming-appointments tbody");
 
   if (!tbody) return;
@@ -67,13 +67,14 @@ function loadUpcomingAppointments() {
 
   const now = new Date();
 
+  // Keep only future appointments, sort them by date, and show the next five.
   const upcoming = appointments
-    .map((a) => ({
-      client: a.client,
-      service: a.service,
-      dateObj: new Date(a.date),
+    .map((appointment) => ({
+      client: appointment.client,
+      service: appointment.service,
+      dateObj: new Date(appointment.date),
     }))
-    .filter((a) => a.dateObj > now)
+    .filter((appointment) => appointment.dateObj > now)
     .sort((a, b) => a.dateObj - b.dateObj)
     .slice(0, 5);
 
@@ -88,11 +89,11 @@ function loadUpcomingAppointments() {
     return;
   }
 
-  upcoming.forEach((app) => {
+  upcoming.forEach((appointment) => {
     const tr = document.createElement("tr");
 
-    const date = app.dateObj.toLocaleDateString();
-    const time = app.dateObj.toLocaleTimeString([], {
+    const date = appointment.dateObj.toLocaleDateString();
+    const time = appointment.dateObj.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -100,8 +101,8 @@ function loadUpcomingAppointments() {
     tr.innerHTML = `
       <td>${date}</td>
       <td>${time}</td>
-      <td>${app.client}</td>
-      <td>${app.service}</td>
+      <td>${appointment.client}</td>
+      <td>${appointment.service}</td>
     `;
 
     tbody.appendChild(tr);
@@ -110,6 +111,6 @@ function loadUpcomingAppointments() {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadDashboardStats();
-  loadtodayAppointments();
+  loadTodayAppointments();
   loadUpcomingAppointments();
 });

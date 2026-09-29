@@ -1,7 +1,7 @@
 const form = document.getElementById("professional-form");
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
 
   const name = document.getElementById("professional-name").value;
   const role = document.getElementById("professional-role").value;
@@ -9,11 +9,10 @@ form.addEventListener("submit", function (e) {
 
   const professionals = JSON.parse(localStorage.getItem("professionals")) || [];
 
+  // Add a new professional or update an existing one.
   if (index === "") {
-    // novo
     professionals.push({ name, role });
   } else {
-    // edição
     professionals[index] = { name, role };
   }
 
@@ -27,7 +26,10 @@ form.addEventListener("submit", function (e) {
 
 function loadProfessionals() {
   const professionals = JSON.parse(localStorage.getItem("professionals")) || [];
+
   const tbody = document.querySelector("#professionals-table tbody");
+
+  if (!tbody) return;
 
   tbody.innerHTML = "";
 
@@ -41,8 +43,6 @@ function loadProfessionals() {
         <button onclick="editProfessional(${index})">✏️</button>
         <button onclick="deleteProfessional(${index})">🗑️</button>
         <button onclick="viewProfessionalSchedule(${index})">📅</button>
-
-        
       </td>
     `;
 
@@ -55,13 +55,29 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function deleteProfessional(index) {
+  // Store the selected professional until the user confirms deletion.
+  window.professionalToDelete = index;
+
+  document.getElementById("delete-professional-message").style.display =
+    "block";
+}
+
+function confirmDeleteProfessional() {
   const professionals = JSON.parse(localStorage.getItem("professionals")) || [];
 
-  professionals.splice(index, 1);
+  // Remove the selected professional and save the updated list.
+  professionals.splice(window.professionalToDelete, 1);
 
   localStorage.setItem("professionals", JSON.stringify(professionals));
 
   loadProfessionals();
+  closeDeleteProfessionalMessage();
+}
+
+function closeDeleteProfessionalMessage() {
+  document.getElementById("delete-professional-message").style.display = "none";
+
+  window.professionalToDelete = null;
 }
 
 function editProfessional(index) {
@@ -71,7 +87,6 @@ function editProfessional(index) {
 
   document.getElementById("professional-name").value = professional.name;
   document.getElementById("professional-role").value = professional.role;
-
   document.getElementById("professional-index").value = index;
 }
 
@@ -80,5 +95,6 @@ function viewProfessionalSchedule(index) {
 
   const professional = professionals[index];
 
+  // Open the schedule filtered by the selected professional.
   window.location.href = `schedule.html?professional=${encodeURIComponent(professional.name)}`;
 }

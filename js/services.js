@@ -2,14 +2,15 @@ let services = JSON.parse(localStorage.getItem("services")) || [];
 
 const form = document.getElementById("service-form");
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
 
   const name = document.getElementById("service-name").value;
   const price = document.getElementById("service-price").value;
   const duration = document.getElementById("service-duration").value;
   const index = document.getElementById("service-index").value;
 
+  // Add a new service or update an existing one.
   if (index === "") {
     services.push({ name, price, duration });
   } else {
@@ -29,6 +30,9 @@ function saveServices() {
 
 function renderServices() {
   const tbody = document.querySelector("#services-table tbody");
+
+  if (!tbody) return;
+
   tbody.innerHTML = "";
 
   services.forEach((service, index) => {
@@ -60,41 +64,58 @@ function editService(index) {
 }
 
 function deleteService(index) {
-  const confirmDelete = confirm(
-    "Are you sure you want to delete this service?",
-  );
+  // Store the selected service until the user confirms deletion.
+  window.serviceToDelete = index;
 
-  if (!confirmDelete) return;
+  document.getElementById("delete-service-message").style.display = "block";
+}
 
-  services.splice(index, 1);
+function confirmDeleteService() {
+  // Remove the selected service and save the updated list.
+  services.splice(window.serviceToDelete, 1);
 
   saveServices();
   renderServices();
+
+  closeDeleteServiceMessage();
 }
 
-// Campo de busca de services
+function closeDeleteServiceMessage() {
+  document.getElementById("delete-service-message").style.display = "none";
+  window.serviceToDelete = null;
+}
+
 const serviceSearch = document.getElementById("service-search");
 
 if (serviceSearch) {
   serviceSearch.addEventListener("input", function () {
     const query = serviceSearch.value.toLowerCase();
 
-    // chama função que atualiza a tabela filtrando
     filterServices(query);
   });
 }
 
 function filterServices(query) {
-  const services = JSON.parse(localStorage.getItem("services")) || [];
   const tbody = document.querySelector("#services-table tbody");
 
-  tbody.innerHTML = ""; // limpa tabela
+  if (!tbody) return;
 
-  const filtered = services.filter((service) =>
-    service.name.toLowerCase().includes(query),
-  );
+  tbody.innerHTML = "";
 
-  filtered.forEach((service) => {
+  const filtered = services
+    .map((service, index) => ({ service, index }))
+    .filter(({ service }) => service.name.toLowerCase().includes(query));
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4">No services found</td>
+      </tr>
+    `;
+    return;
+  }
+
+  filtered.forEach(({ service, index }) => {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
@@ -102,15 +123,11 @@ function filterServices(query) {
       <td>${service.price}</td>
       <td>${service.duration} min</td>
       <td>
-        <button onclick="editService(${index})">Edit></button>
-        <button onclick="deleteService(${index})">Delete></button>
+        <button onclick="editService(${index})">✏️</button>
+        <button onclick="deleteService(${index})">🗑️</button>
       </td>
     `;
 
     tbody.appendChild(tr);
   });
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4">No services found</td></tr>`;
-  }
 }

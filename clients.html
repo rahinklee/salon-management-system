@@ -3,11 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Clients | Barber Shop</title>
+
+    <title>Clients | Salon Management System</title>
+
+    <!-- Load the styles used by the Clients page. -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/main.css" />
   </head>
+
   <body>
     <nav class="menu">
       <a href="dashboard.html">Dashboard</a>
@@ -15,18 +19,31 @@
       <a href="schedule.html">Schedule</a>
       <a href="professionals.html">Professionals</a>
 
+      <!-- Backup confirmation message. -->
       <button onclick="exportBackup()">Backup</button>
+
       <div id="backup-message" class="message-box">
         <span>Do you want to create a backup?</span>
         <button type="button" onclick="confirmBackup()">Backup</button>
         <button type="button" onclick="closeBackupMessage()">Cancel</button>
       </div>
 
+      <!-- Logout confirmation message. -->
       <button onclick="logout()">Logout</button>
+
       <div id="logout-message" class="message-box">
         <span>Are you sure you want to logout?</span>
         <button type="button" onclick="confirmLogout()">Logout</button>
         <button type="button" onclick="closeLogoutMessage()">Cancel</button>
+      </div>
+
+      <!-- Client deletion confirmation message. -->
+      <div id="delete-client-message" class="message-box">
+        <span>Are you sure you want to delete this client?</span>
+        <button type="button" onclick="confirmDeleteClient()">Delete</button>
+        <button type="button" onclick="closeDeleteClientMessage()">
+          Cancel
+        </button>
       </div>
     </nav>
 
@@ -36,7 +53,9 @@
       </header>
 
       <main class="content">
+        <!-- Form used to add or edit clients. -->
         <h3>Add / Edit Client</h3>
+
         <form id="client-form">
           <input type="hidden" id="client-index" />
 
@@ -49,8 +68,10 @@
 
         <hr />
 
+        <!-- Search clients by name, email, or phone. -->
         <input type="text" id="client-search" placeholder="Search clients..." />
 
+        <!-- Client data is loaded dynamically by clients.js. -->
         <table id="clients-table">
           <thead>
             <tr>
@@ -61,12 +82,13 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <!--Load Clients-->
-          </tbody>
+
+          <tbody></tbody>
         </table>
       </main>
     </div>
+
+    <!-- Load client functionality and shared actions. -->
     <script src="js/clients.js"></script>
     <script src="js/backup.js"></script>
     <script src="js/logout.js"></script>

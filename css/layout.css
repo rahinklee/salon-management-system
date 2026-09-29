@@ -1,7 +1,4 @@
-/* =========================
-   BASE
-========================= */
-
+/* Base page layout and typography. */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -9,10 +6,7 @@ body {
   color: white;
 }
 
-/* =========================
-   LOGIN MODE (override)
-========================= */
-
+/* Center the login page vertically and horizontally. */
 body:has(.login-container) {
   display: flex;
   justify-content: center;
@@ -20,10 +14,7 @@ body:has(.login-container) {
   min-height: 100vh;
 }
 
-/* =========================
-   LOGIN BOX
-========================= */
-
+/* Login form container. */
 .login-container {
   background-color: #1c1c1c;
   padding: 40px;
@@ -60,22 +51,18 @@ body:has(.login-container) {
   background-color: var(--orange-light);
 }
 
-/* =========================
-   APP LAYOUT (sidebar system)
-========================= */
-
+/* Use the sidebar layout on all pages except the login page. */
 body:not(:has(.login-container)) {
   display: flex;
 }
 
-/* Sidebar */
+/* Fixed sidebar navigation. */
 .menu {
   position: fixed;
   left: 0;
   top: 0;
   height: 100vh;
   width: 220px;
-  min-height: 100vh;
   background-color: #111;
   padding-top: 20px;
   display: flex;
@@ -93,7 +80,7 @@ body:not(:has(.login-container)) {
   color: #fff;
 }
 
-/* Right side container */
+/* Main page area next to the fixed sidebar. */
 .page {
   flex: 1;
   display: flex;
@@ -101,14 +88,14 @@ body:not(:has(.login-container)) {
   margin-left: 220px;
 }
 
-/* Top bar */
+/* Page header. */
 .top-bar {
   background-color: #1c1c1c;
   padding: 15px 30px;
   border-bottom: 1px solid #333;
 }
 
-/* Main content */
+/* Main page content. */
 .content {
   padding: 40px;
 }

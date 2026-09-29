@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Schedule | Salon Management System</title>
+
+    <!-- Load the styles used by the Schedule page. -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/main.css" />
-
-    <title>Schedule | Barber Shop</title>
   </head>
 
   <body>
@@ -17,18 +19,35 @@
       <a href="services.html">Services</a>
       <a href="professionals.html">Professionals</a>
 
+      <!-- Backup confirmation message. -->
       <button onclick="exportBackup()">Backup</button>
+
       <div id="backup-message" class="message-box">
         <span>Do you want to create a backup?</span>
         <button type="button" onclick="confirmBackup()">Backup</button>
         <button type="button" onclick="closeBackupMessage()">Cancel</button>
       </div>
 
+      <!-- Logout confirmation message. -->
       <button onclick="logout()">Logout</button>
+
       <div id="logout-message" class="message-box">
         <span>Are you sure you want to logout?</span>
         <button type="button" onclick="confirmLogout()">Logout</button>
         <button type="button" onclick="closeLogoutMessage()">Cancel</button>
+      </div>
+
+      <!-- Appointment deletion confirmation message. -->
+      <div id="delete-appointment-message" class="message-box">
+        <span>Are you sure you want to delete this appointment?</span>
+
+        <button type="button" onclick="confirmDeleteAppointment()">
+          Delete
+        </button>
+
+        <button type="button" onclick="closeDeleteAppointmentMessage()">
+          Cancel
+        </button>
       </div>
     </nav>
 
@@ -38,6 +57,7 @@
       </header>
 
       <main class="content">
+        <!-- Form used to create or edit appointments. -->
         <div class="card">
           <h3>Create Appointment</h3>
 
@@ -70,6 +90,7 @@
             />
 
             <label for="schedule-status">Status</label>
+
             <select id="schedule-status">
               <option value="Scheduled">Scheduled</option>
               <option value="Completed">Completed</option>
@@ -77,11 +98,12 @@
               <option value="No-show">No-show</option>
             </select>
 
+            <!-- Message shown when an appointment conflicts with another appointment. -->
             <div id="schedule-message" class="message-box">
-              <span
-                >This professional already has an appointment during this
-                time.</span
-              >
+              <span>
+                This professional already has an appointment during this time.
+              </span>
+
               <button type="button" onclick="closeScheduleMessage()">OK</button>
             </div>
 
@@ -91,7 +113,7 @@
 
         <hr />
 
-        <!-- Campo de busca -->
+        <!-- Search appointments by client, service, professional, or date. -->
         <input
           type="text"
           id="appointment-search"
@@ -101,12 +123,15 @@
         <div class="card">
           <h3>Appointments List</h3>
 
+          <!-- Filter appointments by professional. -->
           <select id="professional-filter">
             <option value="">All Professionals</option>
           </select>
 
+          <!-- Toggle between all appointments and upcoming appointments. -->
           <button id="show-all-appointments">Show All</button>
 
+          <!-- Appointment data is loaded dynamically by schedule.js. -->
           <table id="schedule-table">
             <thead>
               <tr>
@@ -119,12 +144,14 @@
                 <th>Actions</th>
               </tr>
             </thead>
+
             <tbody></tbody>
           </table>
         </div>
       </main>
     </div>
 
+    <!-- Load appointment functionality and shared actions. -->
     <script src="js/schedule.js"></script>
     <script src="js/backup.js"></script>
     <script src="js/logout.js"></script>

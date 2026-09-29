@@ -3,6 +3,7 @@ function logout() {
 }
 
 function confirmLogout() {
+  // Remove the login session before returning to the login page.
   localStorage.removeItem("loggedUser");
   window.location.href = "index.html";
 }

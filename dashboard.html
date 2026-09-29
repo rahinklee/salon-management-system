@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | BSS</title>
+
+    <title>Dashboard | SMS</title>
+
+    <!-- Load the styles and icons used by the dashboard. -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/main.css" />
@@ -12,6 +15,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
   </head>
+
   <body>
     <nav class="menu">
       <a href="clients.html">Clients</a>
@@ -19,14 +23,18 @@
       <a href="schedule.html">Schedule</a>
       <a href="professionals.html">Professionals</a>
 
+      <!-- Backup confirmation message. -->
       <button onclick="exportBackup()">Backup</button>
+
       <div id="backup-message" class="message-box">
         <span>Do you want to create a backup?</span>
         <button type="button" onclick="confirmBackup()">Backup</button>
         <button type="button" onclick="closeBackupMessage()">Cancel</button>
       </div>
 
+      <!-- Logout confirmation message. -->
       <button onclick="logout()">Logout</button>
+
       <div id="logout-message" class="message-box">
         <span>Are you sure you want to logout?</span>
         <button type="button" onclick="confirmLogout()">Logout</button>
@@ -40,6 +48,7 @@
       </header>
 
       <main class="content">
+        <!-- Dashboard statistics. -->
         <div class="stats-container">
           <div class="stat-card">
             <i class="fa-solid fa-users stat-icon"></i>
@@ -66,6 +75,7 @@
           </div>
         </div>
 
+        <!-- Appointments scheduled for today. -->
         <h2>Today's Appointments</h2>
 
         <table id="today-appointments">
@@ -79,6 +89,7 @@
           <tbody></tbody>
         </table>
 
+        <!-- The next five upcoming appointments. -->
         <h2>Upcoming Appointments</h2>
 
         <table id="upcoming-appointments">
@@ -94,6 +105,8 @@
         </table>
       </main>
     </div>
+
+    <!-- Protect the dashboard and load its functionality. -->
     <script src="js/auth-guard.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/backup.js"></script>

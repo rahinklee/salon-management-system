@@ -3,11 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Professionals | Salon Management System</title>
+
+    <!-- Load the styles used by the Professionals page. -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/main.css" />
-    <title>Professionals | Baber Shop</title>
   </head>
+
   <body>
     <nav class="menu">
       <a href="dashboard.html">Dashboard</a>
@@ -15,18 +19,35 @@
       <a href="services.html">Services</a>
       <a href="schedule.html">Schedule</a>
 
+      <!-- Backup confirmation message. -->
       <button onclick="exportBackup()">Backup</button>
+
       <div id="backup-message" class="message-box">
         <span>Do you want to create a backup?</span>
         <button type="button" onclick="confirmBackup()">Backup</button>
         <button type="button" onclick="closeBackupMessage()">Cancel</button>
       </div>
 
+      <!-- Logout confirmation message. -->
       <button onclick="logout()">Logout</button>
+
       <div id="logout-message" class="message-box">
         <span>Are you sure you want to logout?</span>
         <button type="button" onclick="confirmLogout()">Logout</button>
         <button type="button" onclick="closeLogoutMessage()">Cancel</button>
+      </div>
+
+      <!-- Professional deletion confirmation message. -->
+      <div id="delete-professional-message" class="message-box">
+        <span>Are you sure you want to delete this professional?</span>
+
+        <button type="button" onclick="confirmDeleteProfessional()">
+          Delete
+        </button>
+
+        <button type="button" onclick="closeDeleteProfessionalMessage()">
+          Cancel
+        </button>
       </div>
     </nav>
 
@@ -36,6 +57,7 @@
       </header>
 
       <main class="content">
+        <!-- Form used to add or edit professionals. -->
         <h3>Add / Edit Professional</h3>
 
         <form id="professional-form">
@@ -47,10 +69,11 @@
             placeholder="Name"
             required
           />
+
           <input
             type="text"
             id="professional-role"
-            placeholder="Role (Barber, Stylist...)"
+            placeholder="Role (Stylist, Barber...)"
             required
           />
 
@@ -59,6 +82,7 @@
 
         <hr />
 
+        <!-- Professional data is loaded dynamically by professionals.js. -->
         <table id="professionals-table">
           <thead>
             <tr>
@@ -67,13 +91,13 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Load Professionals -->
-          </tbody>
+
+          <tbody></tbody>
         </table>
       </main>
     </div>
 
+    <!-- Load professional functionality and shared actions. -->
     <script src="js/professionals.js"></script>
     <script src="js/backup.js"></script>
     <script src="js/logout.js"></script>

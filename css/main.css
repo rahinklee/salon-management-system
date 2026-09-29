@@ -1,3 +1,7 @@
+/* =========================
+   Theme variables
+   ========================= */
+
 :root {
   --bg-main: #121212;
   --bg-card: #1e1e2f;
@@ -9,11 +13,50 @@
   --text-muted: #bdbdbd;
 }
 
+/* =========================
+   General page styling
+   ========================= */
+
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
   font-family: Arial, sans-serif;
 }
+
+/* =========================
+   Form fields
+   ========================= */
+
+select,
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #1e1e2f;
+  color: white;
+  font-size: 14px;
+}
+
+/* Highlight active form fields. */
+select:focus,
+input:focus {
+  outline: none;
+  border-color: var(--purple-main);
+  box-shadow: 0 0 5px var(--purple-main);
+}
+
+/* Improve visibility of the date picker icon on dark backgrounds. */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+/* =========================
+   Login page
+   ========================= */
 
 .login-container {
   background-color: #1c1c1c;
@@ -30,19 +73,6 @@ body {
   margin-bottom: 1.5rem;
 }
 
-select,
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #1e1e2f;
-  color: white;
-  font-size: 14px;
-}
-
 .login-container input {
   width: 100%;
   padding: 10px;
@@ -50,6 +80,10 @@ input {
   border: none;
   border-radius: 4px;
 }
+
+/* =========================
+   Buttons
+   ========================= */
 
 button {
   background-color: var(--orange-main);
@@ -63,6 +97,7 @@ button {
   box-shadow: 0 3px 6px rgb(0 0 0 / 30%);
 }
 
+/* Compact action buttons used inside tables. */
 table button {
   background-color: #2a2a3d;
   border: 1px solid #444;
@@ -78,14 +113,17 @@ table button {
   transition: 0.2s;
 }
 
+/* General button hover effect. */
 button:hover {
   opacity: 0.9;
 }
 
+/* Slightly reduce the button size while clicking. */
 button:active {
   transform: scale(0.97);
 }
 
+/* Full-width button used on the login form. */
 .login-container button {
   width: 100%;
   padding: 10px 16px;
@@ -99,22 +137,22 @@ button:active {
   box-shadow: 0 3px 6px rgb(0 0 0 / 30%);
 }
 
+/* Highlight table action buttons when hovered. */
 table button:hover {
   background-color: var(--purple-main);
   transform: scale(1.05);
 }
 
+/* Highlight the login button when hovered. */
 .login-container button:hover {
   background-color: var(--orange-light);
 }
 
-.top-bar {
-  background-color: #1c1c1c;
-  color: #fff;
-  padding: 1rem;
-  text-align: center;
-}
+/* =========================
+   Navigation
+   ========================= */
 
+/* Purple gradient used by the sidebar navigation. */
 .menu {
   background: linear-gradient(180deg, var(--purple-main), #4c1d95);
   display: flex;
@@ -135,11 +173,42 @@ table button:hover {
   background-color: var(--orange-main);
 }
 
+/* =========================
+   Page header and content
+   ========================= */
+
+.top-bar {
+  background-color: #1c1c1c;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
 .content {
   padding: 2rem;
   color: #fff;
   text-align: center;
 }
+
+/* Reusable card container used throughout the system. */
+.card {
+  background: var(--bg-card);
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 30%);
+}
+
+/* Keep forms centered and compact. */
+form {
+  margin: 0 auto;
+  margin-bottom: 30px;
+  max-width: 350px;
+}
+
+/* =========================
+   Tables
+   ========================= */
 
 table {
   width: 100%;
@@ -157,9 +226,20 @@ td {
   text-align: left;
 }
 
+/* Alternate row background for better table readability. */
 tr:nth-child(even) {
   background-color: #1a1a2e;
 }
+
+/* Highlight schedule rows when the mouse is over them. */
+#schedule-table tbody tr:hover {
+  background-color: rgb(255 165 0 / 20%);
+  cursor: pointer;
+}
+
+/* =========================
+   Secondary and danger buttons
+   ========================= */
 
 .btn-secondary {
   background-color: var(--purple-main);
@@ -173,6 +253,10 @@ tr:nth-child(even) {
   background-color: #ef4444;
 }
 
+/* =========================
+   Dashboard statistics
+   ========================= */
+
 .stats-container {
   display: flex;
   justify-content: center;
@@ -182,6 +266,7 @@ tr:nth-child(even) {
   margin-bottom: 20px;
 }
 
+/* Individual dashboard statistic card. */
 .stat-card {
   background: var(--bg-card);
   border-left: 5px solid var(--purple-main);
@@ -205,47 +290,25 @@ tr:nth-child(even) {
   color: #c59d5f;
 }
 
-.today {
-  background-color: #2a3b4d;
-  color: #fff;
-}
-
 .stat-icon {
   font-size: 28px;
   color: var(--orange-main);
   margin-bottom: 10px;
 }
 
-select:focus,
-input:focus {
-  outline: none;
-  border-color: var(--purple-main);
-  box-shadow: 0 0 5px var(--purple-main);
+/* =========================
+   Appointment highlighting
+   ========================= */
+
+/* Highlight appointments scheduled for today. */
+.today {
+  background-color: #2a3b4d;
+  color: #fff;
 }
 
-form {
-  margin: 0 auto;
-  margin-bottom: 30px;
-  max-width: 350px;
-}
-
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  cursor: pointer;
-}
-
-.card {
-  background: var(--bg-card);
-  padding: 25px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 10px rgb(0 0 0 / 30%);
-}
-
-#schedule-table tbody tr:hover {
-  background-color: rgb(255 165 0 / 20%);
-  cursor: pointer;
-}
+/* =========================
+   Logout confirmation
+   ========================= */
 
 #logout-message {
   display: none;
@@ -279,6 +342,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   margin: 0 5px;
 }
 
+/* =========================
+   General confirmation messages
+   ========================= */
+
+/* Shared message box used for confirmations and warnings. */
 .message-box {
   display: none;
   position: fixed;

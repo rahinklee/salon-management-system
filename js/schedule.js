@@ -1,5 +1,6 @@
 let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
 let editingIndex = null;
+
 const clients = JSON.parse(localStorage.getItem("clients")) || [];
 const services = JSON.parse(localStorage.getItem("services")) || [];
 
@@ -9,16 +10,20 @@ function loadDropdowns() {
 
   clients.forEach((client) => {
     const option = document.createElement("option");
+
     option.value = client.name;
     option.textContent = client.name;
+
     clientSelect.appendChild(option);
   });
 
   services.forEach((service) => {
     const option = document.createElement("option");
+
     option.value = service.name;
     option.textContent = service.name;
     option.dataset.duration = service.duration;
+
     serviceSelect.appendChild(option);
   });
 }
@@ -29,10 +34,12 @@ function hasConflict(newAppointment) {
   const newStart = new Date(newAppointment.date);
   const newEnd = new Date(newAppointment.endDate);
 
+  // Prevent overlapping appointments for the same professional.
   return appointments.some((appointment, index) => {
     if (index === editingIndex) {
       return false;
     }
+
     if (appointment.professional !== newAppointment.professional) {
       return false;
     }
@@ -44,17 +51,16 @@ function hasConflict(newAppointment) {
   });
 }
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
 
   const client = document.getElementById("schedule-client").value;
   const service = document.getElementById("schedule-service").value;
+  const professional = document.getElementById("schedule-professional").value;
   const date = document.getElementById("schedule-date").value;
   const endDate = document.getElementById("schedule-end-date").value;
-  const status = document.getElementById("schedule-status").value;
   const duration = document.getElementById("schedule-duration").value;
-  const professional = document.getElementById("schedule-professional").value;
-  console.log(date);
+  const status = document.getElementById("schedule-status").value;
 
   const newAppointment = {
     client,
@@ -63,6 +69,7 @@ form.addEventListener("submit", function (e) {
     date,
     endDate,
     duration,
+    status,
   };
 
   if (hasConflict(newAppointment)) {
@@ -70,31 +77,20 @@ form.addEventListener("submit", function (e) {
     return;
   }
 
+  // Update the existing appointment or create a new one.
   if (editingIndex !== null) {
-    appointments[editingIndex] = {
-      client,
-      service,
-      professional,
-      date,
-      endDate,
-      duration,
-      status,
-    };
+    appointments[editingIndex] = newAppointment;
     editingIndex = null;
   } else {
-    appointments.push({
-      client,
-      service,
-      professional,
-      date,
-      endDate,
-      duration,
-      status,
-    });
+    appointments.push(newAppointment);
   }
+
   saveAppointments();
   renderAppointments();
+
   form.reset();
+  document.getElementById("schedule-end-date").value = "";
+  document.getElementById("schedule-duration").value = "";
 });
 
 function saveAppointments() {
@@ -112,6 +108,9 @@ function renderAppointments(showAll = false) {
   const professionalFilter = document.getElementById(
     "professional-filter",
   ).value;
+
+  if (!tbody) return;
+
   tbody.innerHTML = "";
 
   appointments.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -124,6 +123,7 @@ function renderAppointments(showAll = false) {
 
     const matchesClient = !clientName || appointment.client === clientName;
 
+    // Client history shows all appointments; normal view shows upcoming only.
     const matchesDate =
       clientName || showAll || new Date(appointment.date) >= now;
 
@@ -135,12 +135,15 @@ function renderAppointments(showAll = false) {
     const today = new Date().toISOString().split("T")[0];
     const appointmentDay = appointment.date.split("T")[0];
 
-    const d = new Date(appointment.date);
+    const start = new Date(appointment.date);
 
     const formattedDate =
-      d.toLocaleDateString() +
+      start.toLocaleDateString() +
       " " +
-      d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      start.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
     const end = appointment.endDate
       ? new Date(appointment.endDate)
@@ -172,20 +175,15 @@ function renderAppointments(showAll = false) {
 
     tbody.appendChild(tr);
   });
-}
-loadDropdowns();
-loadProfessionals();
-const params = new URLSearchParams(window.location.search);
-const professionalName = params.get("professional");
-const clientName = params.get("client");
 
-if (professionalName) {
-  document.getElementById("professional-filter").value = professionalName;
+  if (filteredAppointments.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">No appointments found</td>
+      </tr>
+    `;
+  }
 }
-if (clientName) {
-  document.getElementById("schedule-client").value = clientName;
-}
-renderAppointments();
 
 function calculateEndTime() {
   const serviceSelect = document.getElementById("schedule-service");
@@ -207,6 +205,7 @@ function calculateEndTime() {
 
   if (!startInput.value || !duration) return;
 
+  // Calculate the appointment end time from the start time and duration.
   const start = new Date(startInput.value);
   start.setMinutes(start.getMinutes() + duration);
 
@@ -221,8 +220,7 @@ function calculateEndTime() {
 document
   .getElementById("schedule-service")
   .addEventListener("change", function () {
-    const serviceSelect = this;
-    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    const selectedOption = this.options[this.selectedIndex];
 
     document.getElementById("schedule-duration").value =
       selectedOption.dataset.duration || "";
@@ -239,16 +237,25 @@ document
   .addEventListener("input", calculateEndTime);
 
 function deleteAppointment(index) {
-  const confirmDelete = confirm(
-    "Are you sure you want to delete this appointment?",
-  );
+  // Store the selected appointment until the user confirms deletion.
+  window.appointmentToDelete = index;
 
-  if (!confirmDelete) return;
+  document.getElementById("delete-appointment-message").style.display = "block";
+}
 
-  appointments.splice(index, 1);
+function confirmDeleteAppointment() {
+  appointments.splice(window.appointmentToDelete, 1);
 
   saveAppointments();
   renderAppointments();
+
+  closeDeleteAppointmentMessage();
+}
+
+function closeDeleteAppointmentMessage() {
+  document.getElementById("delete-appointment-message").style.display = "none";
+
+  window.appointmentToDelete = null;
 }
 
 function editAppointment(index) {
@@ -267,36 +274,67 @@ function editAppointment(index) {
   editingIndex = index;
 }
 
-// Campo de busca de appointments
 const appointmentSearch = document.getElementById("appointment-search");
 
 if (appointmentSearch) {
   appointmentSearch.addEventListener("input", function () {
     const query = appointmentSearch.value.toLowerCase();
+
     filterAppointments(query);
   });
 }
 
 function filterAppointments(query) {
-  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
   const tbody = document.querySelector("#schedule-table tbody");
 
-  tbody.innerHTML = ""; // limpa tabela
+  if (!tbody) return;
 
-  const filtered = appointments.filter(
-    (appointment) =>
-      appointment.client.toLowerCase().includes(query) ||
-      appointment.service.toLowerCase().includes(query) ||
-      new Date(appointment.date).toLocaleString().toLowerCase().includes(query),
-  );
+  tbody.innerHTML = "";
 
-  filtered.forEach((appointment, index) => {
+  // Keep the original appointment index so Edit and Delete work after searching.
+  const filtered = appointments
+    .map((appointment, index) => ({ appointment, index }))
+    .filter(({ appointment }) => {
+      const dateText = new Date(appointment.date)
+        .toLocaleString()
+        .toLowerCase();
+
+      return (
+        appointment.client.toLowerCase().includes(query) ||
+        appointment.service.toLowerCase().includes(query) ||
+        appointment.professional.toLowerCase().includes(query) ||
+        dateText.includes(query)
+      );
+    });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">No appointments found</td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  filtered.forEach(({ appointment, index }) => {
     const tr = document.createElement("tr");
 
-    const dateTime = new Date(appointment.date).toLocaleString([], {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
+    const start = new Date(appointment.date);
+
+    const formattedDate =
+      start.toLocaleDateString() +
+      " " +
+      start.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+    const end = appointment.endDate
+      ? new Date(appointment.endDate)
+      : new Date(appointment.date);
+
+    const formattedEndTime = end.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -304,19 +342,18 @@ function filterAppointments(query) {
     tr.innerHTML = `
       <td>${appointment.client}</td>
       <td>${appointment.service}</td>
-      <td>${dateTime}</td>
+      <td>${appointment.professional}</td>
+      <td>$${getServicePrice(appointment.service)}</td>
+      <td>${appointment.status || "Scheduled"}</td>
+      <td>${formattedDate} - ${formattedEndTime}</td>
       <td>
-        <button onclik="editSchedule(${index})">Edit</button>
-        <button onclik="deleteSchedule(${index})">Delete</button>
+        <button onclick="editAppointment(${index})">✏️</button>
+        <button onclick="deleteAppointment(${index})">🗑️</button>
       </td>
     `;
 
     tbody.appendChild(tr);
   });
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4">No appointments found</td></tr>`;
-  }
 }
 
 function loadProfessionals() {
@@ -330,7 +367,8 @@ function loadProfessionals() {
     professionalSelect.innerHTML += `
       <option value="${professional.name}">
         ${professional.name}
-      </option>`;
+      </option>
+    `;
   });
 
   const professionalFilter = document.getElementById("professional-filter");
@@ -346,6 +384,23 @@ function loadProfessionals() {
   });
 }
 
+const params = new URLSearchParams(window.location.search);
+const professionalName = params.get("professional");
+const clientName = params.get("client");
+
+loadDropdowns();
+loadProfessionals();
+
+if (professionalName) {
+  document.getElementById("professional-filter").value = professionalName;
+}
+
+if (clientName) {
+  document.getElementById("schedule-client").value = clientName;
+}
+
+renderAppointments();
+
 document
   .getElementById("professional-filter")
   .addEventListener("change", function () {
@@ -353,7 +408,6 @@ document
   });
 
 const showAllButton = document.getElementById("show-all-appointments");
-
 let showingAll = false;
 
 showAllButton.addEventListener("click", function () {

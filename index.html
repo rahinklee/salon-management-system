@@ -3,23 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Salon Management System - SMS</title>
-    <!--CSS-->
+
+    <!-- Load the styles used by the login page. -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/main.css" />
   </head>
+
   <body>
     <main class="login-container">
       <h1>Salon Management System - SMS</h1>
 
+      <!-- Login form handled by auth.js. -->
       <form id="loginForm">
         <input type="text" id="username" placeholder="Username" required />
         <input type="password" id="password" placeholder="Password" required />
+
         <button type="submit">Login</button>
       </form>
     </main>
-    <!--JS-->
+
+    <div id="login-message" class="message-box">
+      <span>Invalid username or password.</span>
+      <button type="button" onclick="closeLoginMessage()">OK</button>
+    </div>
+
+    <!-- Handle login authentication. -->
     <script src="js/auth.js"></script>
   </body>
 </html>
