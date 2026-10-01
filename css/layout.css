@@ -64,7 +64,7 @@ body:not(:has(.login-container)) {
   height: 100vh;
   width: 220px;
   background-color: #111;
-  padding-top: 20px;
+  padding-top: 0;
   display: flex;
   flex-direction: column;
 }
@@ -98,4 +98,35 @@ body:not(:has(.login-container)) {
 /* Main page content. */
 .content {
   padding: 40px;
+}
+
+/* Brand header at the top of the sidebar. */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgb(255 255 255 / 15%);
+}
+
+.sidebar-brand > i {
+  font-size: 32px;
+  color: var(--purple-light);
+}
+
+.brand-text h2 {
+  font-size: 21px;
+  margin: 0;
+  color: var(--text-main);
+}
+
+.brand-text h2 span {
+  color: var(--orange-main);
+}
+
+.brand-text p {
+  font-size: 12px;
+  margin-top: 4px;
+  color: var(--text-muted);
 }
